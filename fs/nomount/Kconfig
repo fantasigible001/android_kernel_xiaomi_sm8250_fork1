@@ -1,0 +1,11 @@
+# Kconfig for NoMount
+
+config NOMOUNT
+	tristate "NoMount Path Redirection Subsystem"
+	depends on KEYS
+	default n
+	help
+	  NoMount allows path redirection and virtual file injection
+	  without mounting filesystems. It uses the kernel keyring interface
+	  to receive commands from its userspace companion. This operates at
+	  the VFS layer; enable only on kernels intended to support NoMount.

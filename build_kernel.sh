@@ -77,7 +77,6 @@ if [ "$ENABLE_KSU" -eq 1 ]; then
     echo "==========================================="
     echo "[*] Downloading and running ReSukiSU remote setup script..."
     curl -LSs "https://raw.githubusercontent.com/ReSukiSU/ReSukiSU/main/kernel/setup.sh" | bash
-    curl https://raw.githubusercontent.com/maxsteeel/nomount/refs/heads/dev/kernel/setup.sh | bash -
     echo "[+] KernelSU setup finished."
 fi
 
@@ -214,7 +213,13 @@ build_target() {
             -e KSU_SUSFS
     fi
 
-    # 3. MIUI configurations
+    # 3. NoMount is in-tree and enabled for the Poco F4 (munch) profile.
+    if [ "$DEVICE_NAME" == "munch" ]; then
+        echo "[*] Enabling NoMount and its keyring dependency for Poco F4..."
+        scripts/config --file "${OUT_DIR}/.config" -e KEYS -e NOMOUNT
+    fi
+
+    # 4. MIUI configurations
     if [ "$OS_TYPE" == "miui" ]; then
         echo "[*] Injecting MIUI specific configurations..."
         scripts/config --file "${OUT_DIR}/.config" \
@@ -263,6 +268,15 @@ build_target() {
     # We always need to re-evaluate dependencies because BBG is injected unconditionally
     echo "[*] Updating config (make olddefconfig)..."
     make "${MAKE_OPTS[@]}" olddefconfig
+
+    if [ "$DEVICE_NAME" == "munch" ]; then
+        if ! grep -qx 'CONFIG_KEYS=y' "${OUT_DIR}/.config" || \
+           ! grep -qx 'CONFIG_NOMOUNT=y' "${OUT_DIR}/.config"; then
+            echo "[-] NoMount requires CONFIG_KEYS=y and CONFIG_NOMOUNT=y for the munch build."
+            exit 1
+        fi
+        echo "[+] Verified in-tree NoMount support is enabled for munch."
+    fi
 
     # ----------------------------------------------------
     # Compilation

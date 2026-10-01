@@ -40,7 +40,8 @@ This repository is based on [LineageOS/android_kernel_qcom_sm8250](https://githu
 5. 引入 [LE9EC](https://github.com/hakavlad/le9-patch) 以优化内存  
 6. 向后移植 5.10 的 Binder，MIUI 构建引入来自 xaga 的 millet，AOSP 构建引入 [Re:Kernel](https://github.com/Sakion-Team/Re-Kernel)  
 7. 修复[电量卡在 1% 的问题](https://github.com/liyafe1997/Xiaomi-fix-battery-one-percent)，并且支持解容  
-8. 集成 [BBG(Baseband-guard)](https://github.com/vc-teahouse/Baseband-guard)    
+8. 集成 [BBG(Baseband-guard)](https://github.com/vc-teahouse/Baseband-guard)
+9. 为 POCO F4 (`munch`) 集成 NoMount VFS 重定向内核支持；需另外安装兼容的 NoMount 用户空间模块。
 
 **English:**  
 This kernel supports [ReSukiSU](https://github.com/ReSukiSU/ReSukiSU) & [SuSFS](https://gitlab.com/simonpunk/susfs4ksu).  
@@ -59,6 +60,7 @@ Below are some of the key features:
 6. Backported Binder from 5.10; MIUI builds incorporate millet from xaga, while AOSP builds incorporate [Re:Kernel](https://github.com/Sakion-Team/Re-Kernel)  
 7. Fixes [the issue where the battery percentage gets stuck at 1%](https://github.com/liyafe1997/Xiaomi-fix-battery-one-percent), and supports recognizing higher-capacity replacement batteries  
 8. Integrate [BBG(Baseband-guard)](https://github.com/vc-teahouse/Baseband-guard)  
+9. In-tree NoMount VFS path-redirection support for POCO F4 (`munch`); install a compatible NoMount userspace/metamodule separately.
 
 ---
 
@@ -87,6 +89,15 @@ Join ApartTUSITU's QQ Group: [700675046](https://qm.qq.com/q/Md7nXA3Toa)。
 | enuma               | Xiaomi Pad 5 Pro 5G               |
 | dagu                | Xiaomi Pad 5 Pro 12.4             |
 | pipa                | Xiaomi Pad 6                      |
+
+For POCO F4, use device code `munch`. The `munch` profile enables the in-tree
+NoMount kernel subsystem. For an Android 16 HyperOS 3 port built for `munch`,
+choose the **MIUI** build flavor; choose **AOSP** for an AOSP-based Android 16
+ROM. Xiaomi's published [Global HyperOS 3 schedule](https://www.mi.com/global/hyperos/)
+does not list POCO F4, so this is a target for compatible custom/ported ROMs—not
+a claim that an official POCO F4 HyperOS 3 OTA exists. Matching the ROM's device,
+vendor firmware and kernel ABI is still required, and boot/runtime validation
+must be done on the device.
 
 ---
 
